@@ -1,21 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdlib.h>
 #include "Data.c"
 #include "Settings.c"
 #include "Name.c"
 
 void display(char sym[9]);
-void check(char ch, char sym[9],char player[100]);
+void check(char ch, char sym[9], char playerwin[100], char playerlose[100]);
 int result;
 int* resultPointer = &result;
 
 void play (char sym[9], int count) {
+    FILE *filePointer;
     char choice[1];
+    char c;
     int value;
     int test = 0;
     struct Data info;
+    filePointer = fopen("History.txt","a");
     while(count < 10) {
         if (count%2 == 0) {
             if(ngonngu == 1){
@@ -69,8 +71,8 @@ void play (char sym[9], int count) {
         }
         count ++;
         display(sym);
-        check('X', sym, player1);
-        check('O', sym, player2);
+        check('X', sym, player1, player2);
+        check('O', sym, player2, player1);
         if(result == 1){
             count = 10;
             goto result;
@@ -78,14 +80,17 @@ void play (char sym[9], int count) {
     }
     if(ngonngu == 2){
         printf("It's a draw!\n");
+        fprintf(filePointer,"It's a draw!\n");
     } else {
         printf("Ket qua cua van dau nay la hoa!\n");
+        fprintf(filePointer, "Ket qua cua van dau nay la hoa giua %s va %s!\n",player1, player2);
     }
     result: if (ngonngu == 2){
         printf("Congratulations.\n");
     } else {
         printf("Xin chuc mung.\n");
     }
+    fclose(filePointer);
     if (ngonngu == 2) {
         printf("Press Enter to continue.");
         getchar();
@@ -97,14 +102,18 @@ void play (char sym[9], int count) {
     }
 }
 
-void check(char ch, char sym[9], char player[100]){
+void check(char ch, char sym[9], char playerwin[100], char playerlose[100]){
+    FILE *filePointer;
     int i;
+    filePointer = fopen("History.txt","a"); 
     for(i=0; i<9; i+=3){
         if(sym[i] == ch && sym[i+1] == ch && sym[i+2] == ch){
             if (ngonngu == 2){
-                printf("The winner is %s\n", player);
+                printf("The winner is %s\n", playerwin);
+                fprintf(filePointer, "%s wins against %s\n", playerwin, playerlose);
             } else {
-                printf("Nguoi thang cuoc la %s\n", player);
+                printf("Nguoi thang cuoc la %s\n", playerwin);
+                fprintf(filePointer,"%s thang %s\n", playerwin, playerlose);
             }
             *resultPointer=1;
             break;
@@ -113,9 +122,11 @@ void check(char ch, char sym[9], char player[100]){
     for(i=0; i<3; i++){
         if(sym[i] == ch && sym[i+3] == ch && sym[i+6] == ch){
             if (ngonngu == 2){
-                printf("The winner is %s\n", player);
+                printf("The winner is %s\n", playerwin);
+                fprintf(filePointer, "%s wins against %s\n", playerwin, playerlose);
             } else {
-                printf("Nguoi thang cuoc la %s\n", player);
+                printf("Nguoi thang cuoc la %s\n", playerwin);
+                fprintf(filePointer,"%s thang %s\n", playerwin, playerlose);
             }
             *resultPointer=1;
             break;
@@ -123,20 +134,25 @@ void check(char ch, char sym[9], char player[100]){
     }
     if(sym[0] == ch && sym[4] == ch && sym[8] == ch){
             if (ngonngu == 2){
-                printf("The winner is %s\n", player);
+                printf("The winner is %s\n", playerwin);
+                fprintf(filePointer, "%s wins against %s\n", playerwin, playerlose);
             } else {
-                printf("Nguoi thang cuoc la %s\n", player);
+                printf("Nguoi thang cuoc la %s\n", playerwin);
+                fprintf(filePointer,"%s thang %s\n", playerwin, playerlose);
             }
         *resultPointer=1;
     }
     if(sym[2] == ch && sym[4] == ch && sym[6] == ch){
             if (ngonngu == 2){
-                printf("The winner is %s\n", player);
+                printf("The winner is %s\n", playerwin);
+                fprintf(filePointer, "%s wins against %s\n", playerwin, playerlose);
             } else {
-                printf("Nguoi thang cuoc la n%s\n", player);
+                printf("Nguoi thang cuoc la n%s\n", playerwin);
+                fprintf(filePointer,"%s thang %s\n", playerwin, playerlose);
             }
         *resultPointer=1;
     }
+    fclose(filePointer);
 }
 
 void display (char sym[9]) {

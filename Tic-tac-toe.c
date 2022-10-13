@@ -2,6 +2,5 @@
 #include "Menu.c"
 
 int main() {
-    name();
-    see ();
+    see();
 }

@@ -30,6 +30,7 @@ void see(){
     system("cls");
     switch(option){
         case 1:
+        name();
         do{
             char character[9] = {'1','2','3','4','5','6','7','8','9'};
             display(character);
@@ -57,7 +58,9 @@ void see(){
         } while (next == 1);
             break;
         case 2: 
-
+            History();
+            goto menu;
+            break;
         case 3: 
             Settings();
             goto menu;
