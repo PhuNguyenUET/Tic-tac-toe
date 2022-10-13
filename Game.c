@@ -4,9 +4,10 @@
 #include "Data.c"
 #include "Settings.c"
 #include "Name.c"
+#include "Pointcounter.c"
 
 void display(char sym[9]);
-void check(char ch, char sym[9], char playerwin[100], char playerlose[100]);
+int check(char ch, char sym[9], char playerwin[100], char playerlose[100]);
 int result;
 int* resultPointer = &result;
 
@@ -71,8 +72,20 @@ void play (char sym[9], int count) {
         }
         count ++;
         display(sym);
-        check('X', sym, player1, player2);
-        check('O', sym, player2, player1);
+        int c = 0;
+        c = check('X', sym, player1, player2);
+        if (c == 1){
+            *player1PointCounter += 1;
+        }
+        if(result == 1){
+            count = 10;
+            goto result;
+        }
+        c = 0;
+        c = check('O', sym, player2, player1);
+        if (c == 1){
+            *player2PointCounter += 1;
+        }
         if(result == 1){
             count = 10;
             goto result;
@@ -80,10 +93,14 @@ void play (char sym[9], int count) {
     }
     if(ngonngu == 2){
         printf("It's a draw!\n");
-        fprintf(filePointer,"It's a draw!\n");
+        fprintf(filePointer,"It's a draw between %s va %s\n",player1, player2);
+        *player1PointCounter +=1;
+        *player2PointCounter +=1;
     } else {
         printf("Ket qua cua van dau nay la hoa!\n");
         fprintf(filePointer, "Ket qua cua van dau nay la hoa giua %s va %s!\n",player1, player2);
+        *player1PointCounter +=1;
+        *player2PointCounter +=1;
     }
     result: if (ngonngu == 2){
         printf("Congratulations.\n");
@@ -102,7 +119,7 @@ void play (char sym[9], int count) {
     }
 }
 
-void check(char ch, char sym[9], char playerwin[100], char playerlose[100]){
+int check(char ch, char sym[9], char playerwin[100], char playerlose[100]){
     FILE *filePointer;
     int i;
     filePointer = fopen("History.txt","a"); 
@@ -153,6 +170,11 @@ void check(char ch, char sym[9], char playerwin[100], char playerlose[100]){
         *resultPointer=1;
     }
     fclose(filePointer);
+    if(*resultPointer == 1){
+        return 1; 
+    } else {
+        return 0;
+    }
 }
 
 void display (char sym[9]) {
@@ -167,6 +189,7 @@ void display (char sym[9]) {
     } else {
         printf ("Ky hieu cua %s la O\n",player2);
     }
+    pointcounter(player1,player2);
     printf ("  %c  |  %c  |  %c  \n", sym[0],sym[1],sym[2]);
     printf ("-----|-----|-----\n");
     printf ("  %c  |  %c  |  %c  \n", sym[3],sym[4],sym[5]);

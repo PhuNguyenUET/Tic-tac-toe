@@ -28,6 +28,9 @@ void see(){
     }
     scanf ("%i",&option);
     system("cls");
+    *player1PointCounter = 0;
+    *player2PointCounter = 0;
+    
     switch(option){
         case 1:
         name();
